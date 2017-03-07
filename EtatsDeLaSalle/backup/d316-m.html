@@ -22,40 +22,40 @@
    * モーションセンサ＠棒グラフを追加．
  2015-10-07 Masahide Nakamura <masa-n@cs.kobe-u.ac.jp>
    * プレゼンス尤度棒グラフを追加．
-   
+
 -->
 	<head>
 		<meta charset="UTF-8" />
 		<title>Etats de la Salle D-316 ENSIMAG</title>
 
-		<!------------------------------- Script starts here -------------------------------->
+		<!-- Script starts here -->
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script>google.load("jquery", "1.7.0");</script>
 		<script type="text/javascript" type="text/javascript">
 			// Some global variables here
 			var charts = new Object();     //Set of charts
 			var chartOpts = new Object();  //Set of chart options
-			var refmSec = 1000;            //Refresh interval in ms 
+			var refmSec = 1000;            //Refresh interval in ms
 			var ids = ["force", "gasPressure", "humidity", "light", "sound",
 				"temperature", "vibration", "motion"];
 
 			// Load the Visualization API library and add package name.
 			google.load( 'visualization', '1.0', { 'packages' :[ "corechart" , 'gauge'] });
 			google.setOnLoadCallback( initialize );
-			
+
 			// Prepare charts and call getValue()
 			function initialize () {
 				//Prepare a gauge chart for light sensor
 				charts["light"] = new google.visualization.Gauge(document.getElementById('light'));
 				chartOpts["light"] = {'min':0, 'max':1000, 'yellowFrom':600, 'yellowTo':800,
 					'redFrom':800, 'redTo':1000, 'minorTicks':20, 'width':200, 'height':200};
-				
+
 				//Prepare a column chart for sound sensor
 				charts["sound"] = new google.visualization.ColumnChart(
 						        document.getElementById('sound'));
 				chartOpts["sound"] = {'min':0, 'max':70,'width':250, 'height':250,
 									'legend': {position:"none"}};
-				
+
 				//Prepare a column chart for temperature sensor
 				charts["temperature"] = new google.visualization.ColumnChart(
 						        document.getElementById('temperature'));
@@ -66,25 +66,25 @@
 						        document.getElementById('humidity'));
 				chartOpts["humidity"] = {'min':0, 'max':100,'width':250, 'height':250,
 									'legend': {position:"none"}};
-				
+
 				//Prepare a column chart for gas pressure sensor
 				charts["gasPressure"] = new google.visualization.ColumnChart(
 						        document.getElementById('gasPressure'));
 				chartOpts["gasPressure"] = {'min':80, 'max':130,'width':250, 'height':250,
 									'legend': {position:"none"}};
-				
+
 				//Prepare a column chart for motion sensor
 				charts["motion"] = new google.visualization.ColumnChart(
 						        document.getElementById('motion'));
 				chartOpts["motion"] = {'min':0, 'max':2,'width':250, 'height':250,
 									'legend': {position:"none"}};
-									
-				//Prepare a presence chart for motion sensor					
+
+				//Prepare a presence chart for motion sensor
 				charts["presence"] = new google.visualization.ColumnChart(
-						        document.getElementById('presence'));					
+						        document.getElementById('presence'));
 				chartOpts["presence"] = {'min':0, 'max':100,'width':250, 'height':250,
 									'legend': {position:"none"}};
-				
+
 				setRefreshRate(1000);
 				getValue();
 			}
@@ -176,7 +176,7 @@
 						console.log ("Could not connect the API.");
 					}
 				});
-				
+
 				setTimeout("getValue()",refmSec);
 			}
 
@@ -198,13 +198,13 @@
 			}
 			function updateFanStatus(xml) {
 				var isPowerOn = $(xml).find('power').text();
-				
+
 				var bgcolor = (isPowerOn=="true")? "cyan" : "#dddddd";
 				var power = (isPowerOn=="true")? "ON" : "OFF";
 
 				var src =
 					"<div style=\"height:250px;position: relative;\">" +
-					"<div  style=\"width:120px; height:100px; border-style: solid; "+ 
+					"<div  style=\"width:120px; height:100px; border-style: solid; "+
 					"background-color:" + bgcolor + ";position:absolute;" +
 					"margin: auto; top:0; bottom:0; left:0; right:0;"+
 					"border-color: #dddddd; font-size: 80%;\">" + "Fan<br>" + power + "<br>"
@@ -212,9 +212,9 @@
 					+ "<input type=\"button\" value=\"off\" onclick=\"fanPower(0)\">"
 				    + "</div>"
 				    + "</div>";
-				
+
 				$("#fan").html(src);
-				
+
 			}
 
 			function openWindow(num) {
@@ -254,12 +254,12 @@
 					var state = $(this).find('state').text();
 					states.push(state);
 				});
-				
+
 				var src="";
 				for (var i=0; i<states.length; i++) {
 					var bgcolor = (states[i]=="close")? "#dddddd" : "skyblue";
 					src = src +
-					"<div  style=\"width:120px; border-style: solid; "+ 
+					"<div  style=\"width:120px; border-style: solid; "+
 					"background-color:" + bgcolor + ";" +
 					"margin: auto; top:0; bottom:0; left:0; right:0;"+
 					"border-color: #dddddd; font-size: 80%;\">" + "window"+ i + "<br>" + states[i] + "<br>"
@@ -267,27 +267,27 @@
 					+ "<input type=\"button\" value=\"close\" onclick=\"closeWindow("+ i + ")\">"
 				    + "</div>"
 				}
-				
+
 				$("#windows").html(src);
-				
+
 			}
 
 			//Update the current sensor values for the charts
 			function updateValues(xml) {
 				var keyValue = new Object(); // map {id:value} of sensor values
-				
+
 				$(xml).find('return').each(function() {
 					var id = $(this).find('id').text();
 					var value = $(this).find('value').text();
 					keyValue[id] = value;
 				});
-				
+
 				drawGraphs(keyValue); //Redraw graphs based on the map
 				updateDiscomfortIndex(keyValue);
 				updateDiscomfortIndex2(keyValue);
 
 			}
-			
+
 			//Draw graphs for given values of sensors
 			function drawGraphs(keyValue) {
 				for (var k in keyValue) {
@@ -332,7 +332,7 @@
 						case "motion":
 							data[0] = [ '', 'kPa' , { role: 'annotation' }, {role: 'style'}];
 							var isMoved = (keyValue[k]=="true") ? 2 : 1;
-							
+
 							data[1] = ['Motion', parseFloat(isMoved), keyValue[k], 'color: purple'];
 							dt = google.visualization.arrayToDataTable(data);
 							charts[k].draw(dt, chartOpts[k]);
@@ -342,48 +342,48 @@
 					}
 				}
 			}
-		
+
 		//Calculate and update the discomfort index
 		function updateDiscomfortIndex(keyValue) {
 			var T = parseFloat(keyValue["temperature"]);
 			var H = parseFloat(keyValue["humidity"]);
 			var DI = T - 0.55 * (1-0.01*H) * (T-14.5);
 			DI = Math.round(DI * 100)/100;
-			
-			
+
+
 			var msg, color;
-			
+
 			if (DI<=21) { color = "skyblue"; msg = "Comfortable"; }
 			else if (DI <= 24) { color = "aliceblue"; msg = "It's OK"; }
 			else if (DI <= 27) { color = "yellow"; msg = "A bit discomfort"; }
 			else if (DI <= 29) { color = "gold"; msg = "Discomfort"; }
 			else if (DI <= 32) { color = "darkorange"; msg = "Warning. Very discomfort"; }
 			else               { color = "red"; msg = "Severe. Call emergency"; }
-			
+
 			//Dirty code... I should define the style in another section
 			var src  = "<div style=\"height:250px;position: relative;\">"
 				 + "<div style=\"position:absolute;" +
 				 "margin: auto; top:0; bottom:0; left:0; right:0;" +
-				 "width:120px; height:120px;font-size: 80%;" + 
-				 "background-color:" +color+";" + 
+				 "width:120px; height:120px;font-size: 80%;" +
+				 "background-color:" +color+";" +
 				 "\"><br>" + DI + "<br><br>" + msg + "</div>"
 				 + "</div>";
-			
+
 			$("#DI").html(src);
-			
+
 			return DI;
 		}
-		
+
 		//Calculate and update the discomfort index (Japanese Index)
 		function updateDiscomfortIndex2(keyValue) {
 			var T = parseFloat(keyValue["temperature"]);
 			var H = parseFloat(keyValue["humidity"]);
 			var DI = 0.81*T + 0.01 * H * (0.99*T - 14.3) + 46.3;
 			DI = Math.round(DI * 100)/100;
-			
-			
+
+
 			var msg, color;
-			
+
 			if (DI<=55) { color = "blueviolet"; msg = "Cold"; }
 			else if (DI <= 60) { color = "skyblue"; msg = "A bit cold"; }
 			else if (DI <= 65) { color = "aliceblue"; msg = "It's OK"; }
@@ -392,23 +392,23 @@
 			else if (DI <= 80) { color = "yellow"; msg = "A bit hot"; }
 			else if (DI <= 85) { color = "gold"; msg = "Hot"; }
 			else               { color = "red"; msg = "Very hot. Call emergency"; }
-			
+
 			//Dirty code... I should define the style in another section
 			var src  = "<div style=\"height:250px;position: relative;\">"
 				 + "<div style=\"position:absolute;" +
 				 "margin: auto; top:0; bottom:0; left:0; right:0;" +
-				 "width:120px; height:120px; font-size: 80%;" + 
-				 "background-color:" +color+";" + 
+				 "width:120px; height:120px; font-size: 80%;" +
+				 "background-color:" +color+";" +
 				 "\"><br>" + DI + "<br><br>" + msg + "</div>"
 				 + "</div>";
-			
+
 			$("#DI2").html(src);
-			
+
 			return DI;
 		}
-		
-		
-			
+
+
+
 		//Change the refresh rate
 		function setRefreshRate(newValue) {
 			refmSec = newValue;
@@ -455,7 +455,7 @@
 				<div>Taux de Rafraîchissement:
 					<input type="range" min="100" max="1000" value="1000" step="100"
 					onchange="setRefreshRate(this.value)"/>
-					<span id="refRate"></span> msec</div> 
+					<span id="refRate"></span> msec</div>
 			</div>
 			<div id="content">
 				<p>luminosité <span id="light"></span></p>

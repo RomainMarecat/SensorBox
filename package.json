@@ -1,0 +1,30 @@
+{
+  "name": "sensorbox",
+  "version": "1.0.0",
+  "description": "monitor sensor",
+  "main": "index.html",
+  "dependencies": {
+    "materialize-css": "^0.98.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RomainMarecat/SensorBox.git"
+  },
+  "keywords": [
+    "sensor",
+    "raspberry",
+    "pi",
+    "java",
+    "js"
+  ],
+  "author": "Romain Marecat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RomainMarecat/SensorBox/issues"
+  },
+  "homepage": "https://github.com/RomainMarecat/SensorBox#readme"
+}
