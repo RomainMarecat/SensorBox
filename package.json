@@ -4,7 +4,8 @@
   "description": "monitor sensor",
   "main": "index.html",
   "dependencies": {
-    "materialize-css": "^0.98.0"
+    "materialize-css": "^0.98.0",
+    "jquery": "latest"
   },
   "devDependencies": {},
   "scripts": {
